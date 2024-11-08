@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q2</title>
+    <link rel="icon" href="/assets/images/logo.png" />
+
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #121212;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      p {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 500;
+        color: #ff4d4d;
+      }
+
+      .container {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0;
+        width: 80%;
+        margin: 15px auto;
+      }
+
+      .line {
+        width: 80%;
+        margin: 0 auto;
+        border: 1px solid white;
+        border-radius: 5px;
+      }
+
+      .card {
+        width: 10vw;
+        height: 2vw;
+        background-color: white;
+        border-radius: 5px;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 1rem;
+        margin: 15px auto;
+      }
+
+      button {
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <p>JavaScript Knight Rider</p>
+
+    <div class="line"></div>
+
+    <div class="container">
+      <div class="card"></div>
+      <div class="card"></div>
+      <div class="card"></div>
+      <div class="card"></div>
+      <div class="card"></div>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="button-container">
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+    </div>
+
+    <!-- JS -->
+    <script>
+      const cards = document.getElementsByClassName("card");
+      const startBtn = document.getElementById("startBtn");
+      const stopBtn = document.getElementById("stopBtn");
+      let isRunning = false;
+      let currentIndex = 0;
+      let direction = 1;
+      let interval;
+      const audio = new Audio("/assets/audio/kitt_scanner_sound.mp3");
+
+      const colors = ["#ff0000", "#ff1a1a", "#ff4d4d", "#ff8080", "#ffffff"];
+
+      function resetCards() {
+        for (let i = 0; i < cards.length; i++) {
+          cards[i].style.backgroundColor = "white";
+        }
+      }
+
+      function animate() {
+        if (direction === 1) {
+          for (let i = 0; i < colors.length; i++) {
+            const cardIndex = currentIndex - i;
+            if (cardIndex >= 0) {
+              cards[cardIndex].style.backgroundColor = colors[i];
+            }
+          }
+
+          currentIndex++;
+          if (currentIndex >= cards.length) {
+            direction = -1;
+            currentIndex = cards.length - 1;
+          }
+        } else {
+          for (let i = 0; i < colors.length; i++) {
+            const cardIndex = currentIndex + i;
+            if (cardIndex < cards.length) {
+              cards[cardIndex].style.backgroundColor = colors[i];
+            }
+          }
+
+          currentIndex--;
+          if (currentIndex < 0) {
+            direction = 1;
+            currentIndex = 0;
+          }
+        }
+      }
+
+      startBtn.onclick = function () {
+        if (!isRunning) {
+          isRunning = true;
+
+          audio.play();
+          audio.loop = true;
+
+          interval = setInterval(animate, 150);
+
+          startBtn.style.backgroundColor = "#ff4d4d";
+          stopBtn.style.backgroundColor = "white";
+        }
+      };
+
+      stopBtn.onclick = function () {
+        if (isRunning) {
+          isRunning = false;
+          clearInterval(interval);
+          audio.pause();
+          audio.currentTime = 0;
+
+          currentIndex = 0;
+          direction = 1;
+          stopBtn.style.backgroundColor = "#ff4d4d";
+          startBtn.style.backgroundColor = "white";
+        }
+      };
+    </script>
+  </body>
+</html>
